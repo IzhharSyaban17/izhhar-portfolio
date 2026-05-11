@@ -1,8 +1,9 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 export default function Skills() {
-  const containerVariants = {
+  // 1. Kunci struktur dan tipe transisi menggunakan Variants resmi dari Framer Motion
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -10,12 +11,15 @@ export default function Skills() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, type: "spring" },
+      transition: {
+        duration: 0.6,
+        type: "spring", // Tipe ini sekarang aman dan dikenali penuh
+      },
     },
   };
 
@@ -32,7 +36,7 @@ export default function Skills() {
           </h2>
         </div>
 
-        {/* Ubah grid-cols-3 menjadi lg:grid-cols-2 gap-8 agar pas untuk 4 kotak */}
+        {/* Grid Container */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
