@@ -68,21 +68,27 @@ export default function DetailsPage() {
   // Varian animasi untuk efek menggeser (Slide Left / Slide Right)
   const slideVariants = {
     hidden: (isSertif: boolean) => ({
-      x: isSertif ? 100 : -100, // Jika ke sertif, masuk dari kanan. Jika ke dok, masuk dari kiri.
+      x: isSertif ? 100 : -100,
       opacity: 0,
     }),
-    visible: {
+    // Ubah visible menjadi bentuk fungsi (arrow function) agar seragam
+    visible: (isSertif: boolean) => ({
       x: 0,
       opacity: 1,
-      transition: { type: "spring", stiffness: 250, damping: 25 },
-    },
+      transition: {
+        type: "spring",
+        stiffness: 250,
+        damping: 25,
+      },
+    }),
     exit: (isSertif: boolean) => ({
-      x: isSertif ? -100 : 100, // Tergeser keluar ke arah berlawanan
+      x: isSertif ? -100 : 100,
       opacity: 0,
-      transition: { duration: 0.2 },
+      transition: {
+        duration: 0.2,
+      },
     }),
   };
-
   return (
     <main className="bg-dark min-h-screen text-white overflow-x-hidden pb-24">
       {/* Tombol Kembali Melayang di Atas */}
