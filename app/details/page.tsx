@@ -71,16 +71,15 @@ export default function DetailsPage() {
       x: isSertif ? 100 : -100,
       opacity: 0,
     }),
-    // Ubah visible menjadi bentuk fungsi (arrow function) agar seragam
-    visible: (isSertif: boolean) => ({
+    visible: {
       x: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const, // <-- KUNCI UTAMANYA DI SINI (as const)
         stiffness: 250,
         damping: 25,
       },
-    }),
+    },
     exit: (isSertif: boolean) => ({
       x: isSertif ? -100 : 100,
       opacity: 0,
