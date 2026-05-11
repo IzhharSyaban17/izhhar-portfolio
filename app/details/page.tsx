@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { ArrowLeft, Award, Camera, ExternalLink } from "lucide-react";
 
 export default function DetailsPage() {
@@ -43,7 +43,7 @@ export default function DetailsPage() {
       title: "Kompetensi Web Development (Laravel)",
       issuer: "Badan Nasional Sertifikasi Profesi (BNSP) / LSP",
       year: "2025",
-      img: "https://images.unsplash.com/photo-1589330694653-ded6df03f754?auto=format&fit=crop&q=80", // Placeholder gambar sertifikat
+      img: "https://images.unsplash.com/photo-1589330694653-ded6df03f754?auto=format&fit=crop&q=80",
     },
     {
       title: "Data Visualization & Analytics with Tableau",
@@ -65,21 +65,23 @@ export default function DetailsPage() {
     },
   ];
 
-  // Varian animasi untuk efek menggeser (Slide Left / Slide Right)
-  const slideVariants = {
+  // ============================================================================
+  // PERBAIKAN FINAL: Menggunakan fungsi untuk semua state & mengunci tipe Variants
+  // ============================================================================
+  const slideVariants: Variants = {
     hidden: (isSertif: boolean) => ({
       x: isSertif ? 100 : -100,
       opacity: 0,
     }),
-    visible: {
+    visible: (isSertif: boolean) => ({
       x: 0,
       opacity: 1,
       transition: {
-        type: "spring" as const, // <-- KUNCI UTAMANYA DI SINI (as const)
+        type: "spring",
         stiffness: 250,
         damping: 25,
       },
-    },
+    }),
     exit: (isSertif: boolean) => ({
       x: isSertif ? -100 : 100,
       opacity: 0,
@@ -88,6 +90,7 @@ export default function DetailsPage() {
       },
     }),
   };
+
   return (
     <main className="bg-dark min-h-screen text-white overflow-x-hidden pb-24">
       {/* Tombol Kembali Melayang di Atas */}
