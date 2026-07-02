@@ -33,7 +33,7 @@ export default function Contact() {
           <h4 className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-4">
             &mdash; LET&apos;S CONNECT
           </h4>
-          <h2 className="text-5xl md:text-6xl font-heading font-bold mb-6 text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-white">
             Ayo bangun sesuatu yang <span className="text-gold">berani</span>.
           </h2>
           <p className="text-slate-300">

@@ -25,6 +25,10 @@
   html {
     @apply font-sans;
   }
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 @utility glass {

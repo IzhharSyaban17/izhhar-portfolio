@@ -27,10 +27,10 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const contentY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
-  const photoY = useTransform(scrollYProgress, [0, 0.5], [0, 80]);
-  const photoOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0.3]);
+  const contentY = useTransform(scrollYProgress, [0.35, 0.85], [0, -100]);
+  const contentOpacity = useTransform(scrollYProgress, [0.35, 0.75], [1, 0]);
+  const photoY = useTransform(scrollYProgress, [0.35, 0.85], [0, 80]);
+  const photoOpacity = useTransform(scrollYProgress, [0.35, 0.75], [1, 0.3]);
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
   const currentTab = heroTabs.find((t) => t.id === activeTab)!;
@@ -45,7 +45,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center overflow-hidden bg-dark pt-20"
+      className="relative min-h-screen min-h-[100dvh] flex items-center overflow-hidden bg-dark pt-28 pb-12 lg:py-20"
     >
       <Spotlight
         className="-top-40 left-0 md:left-60 md:-top-20"
@@ -107,14 +107,14 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex gap-2 mt-8"
+                className="flex flex-wrap gap-3 mt-8"
               >
                 {heroTabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={cn(
-                      "px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300",
+                      "px-6 min-h-[44px] flex items-center justify-center rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer",
                       activeTab === tab.id
                         ? "bg-gold text-dark shadow-[0_0_20px_rgba(212,175,55,0.3)]"
                         : "border border-gold/30 text-gold/70 hover:border-gold/60 hover:text-gold",
@@ -248,7 +248,7 @@ export default function Hero() {
                       width={320}
                       height={384}
                       unoptimized
-                      className="w-72 h-80 md:w-80 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
+                      className="w-60 h-72 sm:w-72 sm:h-80 md:w-80 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                   <div className="mt-3 md:mt-4 text-center">

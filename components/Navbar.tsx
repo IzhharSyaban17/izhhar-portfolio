@@ -148,57 +148,56 @@ export default function Navbar() {
 
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, x: 300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 300 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-72 bg-dark/95 backdrop-blur-2xl border-l border-gold/20 shadow-2xl md:hidden z-40"
-            >
-              <div className="pt-24 px-8 flex flex-col space-y-2">
-                {navLinks.map((link) => {
-                  const isActive = activeSection === link.href.replace("#", "");
-                  return (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, x: 300 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 300 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 h-full w-[min(288px,85vw)] bg-dark/95 backdrop-blur-2xl border-l border-gold/20 shadow-2xl md:hidden z-40 overflow-y-auto"
+              >
+                <div className="pt-24 px-8 pb-12 flex flex-col space-y-2">
+                  {navLinks.map((link) => {
+                    const isActive = activeSection === link.href.replace("#", "");
+                    return (
+                      <a
+                        key={link.name}
+                        href={link.href}
+                        onClick={(e) => handleSmoothScroll(e, link.href)}
+                        className={`relative flex items-center space-x-4 text-lg py-4 px-4 rounded-xl transition-all ${
+                          isActive
+                            ? "text-gold bg-gold/10 border border-gold/20"
+                            : "text-white/70 hover:text-gold hover:bg-gold/5"
+                        }`}
+                      >
+                        <span className="text-gold">{link.icon}</span>
+                        <span className="font-heading font-bold uppercase tracking-widest">
+                          {link.name}
+                        </span>
+                      </a>
+                    );
+                  })}
+                  <div className="pt-6 px-4">
                     <a
-                      key={link.name}
-                      href={link.href}
-                      onClick={(e) => handleSmoothScroll(e, link.href)}
-                      className={`relative flex items-center space-x-4 text-lg py-4 px-4 rounded-xl transition-all ${
-                        isActive
-                          ? "text-gold bg-gold/10 border border-gold/20"
-                          : "text-white/70 hover:text-gold hover:bg-gold/5"
-                      }`}
+                      href="#contact"
+                      onClick={(e) => handleSmoothScroll(e, "#contact")}
+                      className="block bg-gold text-dark font-bold py-4 rounded-xl text-center uppercase tracking-widest hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all"
                     >
-                      <span className="text-gold">{link.icon}</span>
-                      <span className="font-heading font-bold uppercase tracking-widest">
-                        {link.name}
-                      </span>
+                      Hire Me
                     </a>
-                  );
-                })}
-                <div className="pt-6 px-4">
-                  <a
-                    href="#contact"
-                    onClick={(e) => handleSmoothScroll(e, "#contact")}
-                    className="block bg-gold text-dark font-bold py-4 rounded-xl text-center uppercase tracking-widest hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all"
-                  >
-                    Hire Me
-                  </a>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
-
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-30 md:hidden"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-        )}
       </motion.nav>
     </>
   );

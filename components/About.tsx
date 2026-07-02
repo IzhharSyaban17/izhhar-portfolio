@@ -57,7 +57,7 @@ export default function About() {
           <h4 className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-6 italic">
             &mdash; ABOUT ME
           </h4>
-          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4 leading-tight text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold mb-4 leading-tight text-white">
             Logika <span className="text-gold">Terstruktur</span> <br /> Bertemu{" "}
             <span className="text-white">Energi Disiplin</span>.
           </h2>
@@ -96,7 +96,7 @@ export default function About() {
               {heroTabs[0].description}
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-4">
               {developerCards.map((item, idx) => {
                 const Icon = iconMap[item.icon];
                 return (
@@ -147,7 +147,7 @@ export default function About() {
               {heroTabs[1].description}
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-4">
               {taekwondoCards.map((item, idx) => {
                 const Icon = iconMap[item.icon];
                 return (
