@@ -1,251 +1,269 @@
 "use client";
 import {
   motion,
-  AnimatePresence,
   useScroll,
   useTransform,
+  AnimatePresence,
 } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
-
-const backgroundImages = [
-  "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1555597673-b21d5c935865?auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1544367567-0f2fcb046eb9?auto=format&fit=crop&q=80",
-];
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { SparklesText } from "@/components/ui/sparkles-text";
+import { WordRotate } from "@/components/ui/word-rotate";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { RetroGrid } from "@/components/ui/retro-grid";
+import { Spotlight } from "@/components/ui/aceternity/spotlight";
+import { BackgroundBeams } from "@/components/ui/aceternity/background-beams";
+import { heroTabs, personalInfo, stats } from "@/data/personal";
+import { cn } from "@/lib/utils";
 
 export default function Hero() {
-  const [currentBg, setCurrentBg] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState<"developer" | "taekwondo">(
+    "developer",
+  );
 
-  // State untuk mendeteksi apakah layar HP/Tablet (< 1024px)
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    checkScreenSize(); // Cek saat pertama kali load
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
-  // 1. Setup Framer Motion Scroll Tracking
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // =========================================================================
-  // 2. LOGIKA ANIMASI RESPONSIF (TERLAMBAT DI HP, CEPAT DI PC)
-  // =========================================================================
+  const contentY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  const photoY = useTransform(scrollYProgress, [0, 0.5], [0, 80]);
+  const photoOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0.3]);
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
-  // Teks Kiri (Nama):
-  // Di PC mulai dari 0. Di HP mulai bergeser dari 0.3 (menunggu foto ter-scroll)
-  const textLeftX = useTransform(
-    scrollYProgress,
-    isMobile ? [0.3, 0.8] : [0, 0.5],
-    isMobile ? [0, -150] : [0, -300], // Geser lebih sedikit di HP agar tidak meluber
-  );
-  const textLeftOpacity = useTransform(
-    scrollYProgress,
-    isMobile ? [0.3, 0.7] : [0, 0.4],
-    [1, 0],
-  );
-
-  // Teks Kanan (Deskripsi Mahasiswa):
-  // Di HP posisinya paling bawah, jadi kita tunda lebih lama lagi (mulai 0.4)
-  const textRightX = useTransform(
-    scrollYProgress,
-    isMobile ? [0.4, 0.9] : [0, 0.5],
-    isMobile ? [0, 150] : [0, 300],
-  );
-  const textRightOpacity = useTransform(
-    scrollYProgress,
-    isMobile ? [0.4, 0.8] : [0, 0.4],
-    [1, 0],
-  );
-
-  // Foto Tengah:
-  const imageY = useTransform(
-    scrollYProgress,
-    isMobile ? [0.2, 0.8] : [0, 0.5],
-    [0, 100],
-  );
-  const imageOpacity = useTransform(
-    scrollYProgress,
-    isMobile ? [0.3, 0.8] : [0, 0.5],
-    [1, 0],
-  );
-
-  // Efek Slideshow Background
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBg((prev) => (prev + 1) % backgroundImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // State untuk melacak posisi mouse pada kartu 3D
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget;
-    const box = card.getBoundingClientRect();
-    const x = e.clientX - box.left;
-    const y = e.clientY - box.top;
-
-    const centerX = box.width / 2;
-    const centerY = box.height / 2;
-
-    const rotateXValue = ((y - centerY) / centerY) * -15;
-    const rotateYValue = ((x - centerX) / centerX) * 15;
-
-    setRotateX(rotateXValue);
-    setRotateY(rotateYValue);
+  const currentTab = heroTabs.find((t) => t.id === activeTab)!;
+  const categoryMap: Record<string, "dev" | "tkd"> = {
+    developer: "dev",
+    taekwondo: "tkd",
   };
-
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-  };
+  const currentStats = stats.filter(
+    (s) => s.category === categoryMap[activeTab] || s.category === "all",
+  );
 
   return (
     <section
       ref={containerRef}
-      className="min-h-screen flex items-center justify-center pt-20 px-6 overflow-hidden relative bg-dark"
+      className="relative min-h-screen flex items-center overflow-hidden bg-dark pt-20"
     >
-      <AnimatePresence mode="popLayout">
-        <motion.img
-          key={currentBg}
-          src={backgroundImages[currentBg]}
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 0.15, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 2 }}
-          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+      <Spotlight
+        className="-top-40 left-0 md:left-60 md:-top-20"
+        fill="#d4af37"
+      />
+      <motion.div style={{ y: bgY }} className="absolute inset-0">
+        <RetroGrid
+          angle={65}
+          cellSize={60}
+          opacity={0.15}
+          lightLineColor="#d4af37"
+          darkLineColor="#d4af37"
         />
-      </AnimatePresence>
+      </motion.div>
+      <BackgroundBeams className="opacity-30" />
+
+      <div className="absolute inset-0 bg-gradient-to-b from-dark/60 via-dark/30 to-dark pointer-events-none z-[2]" />
 
       <motion.div
-        animate={{ x: [0, -2000] }}
-        transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
-        className="absolute top-1/3 left-0 whitespace-nowrap text-[10rem] md:text-[15rem] font-heading font-black text-white/5 z-0 pointer-events-none"
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative z-10 w-full"
       >
-        WEB DEVELOPER • TAEKWONDO COACH • DATA ANALYST • LEADER •
-      </motion.div>
-
-      <div className="absolute inset-0 bg-gradient-to-t from-dark via-navy/30 to-dark/80 z-0" />
-
-      {/* Konten Utama */}
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center relative z-10 w-full min-h-[600px]">
-        {/* KOLOM KIRI: Nama Panjang */}
-        <motion.div
-          style={{ x: textLeftX, opacity: textLeftOpacity }}
-          initial={{ opacity: 0, x: -150 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, type: "spring", bounce: 0.3 }}
-          className="lg:col-span-5 text-left order-2 lg:order-1 z-20 mt-4 lg:mt-0"
-        >
-          <span className="text-gold font-bold tracking-[0.3em] text-xs md:text-sm uppercase mb-3 block">
-            — Welcome to My Arena
-          </span>
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-heading font-bold text-white leading-[1.05] drop-shadow-2xl">
-            MUHAMMAD <br />
-            IZHHAR <br />
-            <span className="text-gold italic">SYA'BAN LUBIS</span>
-          </h1>
-        </motion.div>
-
-        {/* KOLOM TENGAH: Foto Profil 3D */}
-        <motion.div
-          style={{ y: imageY, opacity: imageOpacity }}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3, type: "spring" }}
-          className="lg:col-span-4 flex justify-center order-1 lg:order-2 relative my-4 lg:my-0"
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-            className="absolute inset-0 m-auto w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] lg:w-[380px] lg:h-[380px] rounded-full border border-dashed border-gold/30 pointer-events-none"
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-            className="absolute inset-0 m-auto w-[310px] h-[310px] sm:w-[380px] sm:h-[380px] lg:w-[420px] lg:h-[420px] rounded-full border border-gold/10 pointer-events-none"
-          />
-
-          <div
-            style={{ perspective: 1000 }}
-            className="relative cursor-grab active:cursor-grabbing z-20"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
-              animate={{ rotateX: rotateX, rotateY: rotateY }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-[2.5rem] p-3 bg-gradient-to-br from-gold/20 via-navy/50 to-dark backdrop-blur-md border-2 border-gold/40 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden group"
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="order-2 lg:order-1"
             >
-              <div
-                className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-30"
-                style={{
-                  transform: `translate(${rotateY * 2}px, ${rotateX * 2}px)`,
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-gold font-bold tracking-[0.3em] text-xs uppercase mb-6 block"
+              >
+                &mdash; {personalInfo.tagline}
+              </motion.span>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <h1>
+                  <SparklesText
+                    colors={{ first: "#d4af37", second: "#c5a028" }}
+                    sparklesCount={8}
+                    className="text-4xl sm:text-5xl md:text-7xl font-heading font-bold leading-[1.1] text-left"
+                  >
+                    Muhammad Izhhar
+                    <br />
+                    Sya&apos;ban Lubis
+                  </SparklesText>
+                </h1>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="flex gap-2 mt-8"
+              >
+                {heroTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={cn(
+                      "px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300",
+                      activeTab === tab.id
+                        ? "bg-gold text-dark shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+                        : "border border-gold/30 text-gold/70 hover:border-gold/60 hover:text-gold",
+                    )}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </motion.div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.05 }}
+                    className="mt-6"
+                  >
+                    <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-2">
+                      <span className="text-gold font-bold text-[10px] uppercase tracking-widest">
+                        &#10022; {currentTab.badge}
+                      </span>
+                    </div>
+                    <WordRotate
+                      words={currentTab.rotatingWords}
+                      duration={3000}
+                      className="text-xl md:text-2xl font-heading font-bold text-gold tracking-wide text-left"
+                    />
+                  </motion.div>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                    className="mt-6 text-slate-300 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed text-left"
+                  >
+                    {currentTab.description}
+                  </motion.p>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.15 }}
+                    className="mt-8 flex flex-wrap items-center gap-5"
+                  >
+                    <div className="flex items-center gap-4 text-xs text-slate-400">
+                      {currentStats.map((stat, i) => (
+                        <span key={i} className="flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+                          {stat.value}
+                          {stat.suffix} {stat.label}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="mt-8 flex flex-wrap gap-4"
+                  >
+                    {currentTab.cta.map((btn, i) =>
+                      i === 0 ? (
+                        <a
+                          key={i}
+                          href={btn.href}
+                          className="bg-gradient-to-r from-gold to-premium text-dark font-bold px-6 py-3 rounded-full text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all"
+                        >
+                          {btn.label}
+                        </a>
+                      ) : (
+                        <a
+                          key={i}
+                          href={btn.href}
+                          className="border border-gold/40 text-gold font-bold px-6 py-3 rounded-full text-sm uppercase tracking-widest hover:bg-gold/10 transition-all"
+                        >
+                          {btn.label}
+                        </a>
+                      ),
+                    )}
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+              style={{ y: photoY, opacity: photoOpacity }}
+              className="order-1 lg:order-2 flex justify-center lg:justify-end"
+            >
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 5,
+                  ease: "easeInOut",
                 }}
-              />
-              <div className="w-full h-full rounded-[2rem] overflow-hidden bg-dark">
-                <img
-                  src="/profile.jpg"
-                  alt="Izhhar Profile"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="absolute top-4 right-4 w-3 h-3 border-t-2 border-r-2 border-gold z-30" />
-              <div className="absolute bottom-4 left-4 w-3 h-3 border-b-2 border-l-2 border-gold z-30" />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 bg-navy/95 border-2 border-gold p-4 sm:p-5 rounded-2xl shadow-2xl backdrop-blur-xl z-40 pointer-events-none"
-            >
-              <span className="text-gold font-heading font-bold text-3xl sm:text-4xl block leading-none">
-                21
-              </span>
-              <span className="text-[9px] sm:text-[10px] text-slate-300 uppercase tracking-widest mt-1 block font-bold">
-                Age & Passion
-              </span>
+                className="relative"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.02, rotate: 0 }}
+                  className="relative overflow-hidden rounded-2xl glass-gold p-3 md:p-4"
+                  style={{ rotate: "2deg" }}
+                >
+                  <BorderBeam
+                    size={120}
+                    duration={8}
+                    delay={0}
+                    colorFrom="#d4af37"
+                    colorTo="#c5a028"
+                    borderWidth={1.5}
+                  />
+                  <div
+                    className="relative overflow-hidden rounded-xl bg-dark"
+                    style={{
+                      clipPath: "polygon(0 6%, 100% 0, 100% 94%, 0 100%)",
+                    }}
+                  >
+                    <Image
+                      src="/profile.jpg"
+                      alt="Muhammad Izhhar Sya'ban Lubis - Web Developer & Taekwondo Coach"
+                      width={320}
+                      height={384}
+                      unoptimized
+                      className="w-72 h-80 md:w-80 md:h-96 object-cover hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="mt-3 md:mt-4 text-center">
+                    <span className="text-xs text-slate-400 font-heading tracking-widest">
+                      {activeTab === "developer"
+                        ? "\u201CCode. Analyze. Innovate.\u201D"
+                        : "\u201CDiscipline. Lead. Compete.\u201D"}
+                    </span>
+                  </div>
+                </motion.div>
+              </motion.div>
             </motion.div>
           </div>
-        </motion.div>
-
-        {/* KOLOM KANAN: Deskripsi Mahasiswa */}
-        <motion.div
-          style={{ x: textRightX, opacity: textRightOpacity }}
-          initial={{ opacity: 0, x: 150 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, type: "spring", bounce: 0.3 }}
-          className="lg:col-span-3 text-left lg:text-right order-3 z-20 flex flex-col justify-center mt-4 lg:mt-0"
-        >
-          <div className="inline-block bg-gold/10 border border-gold/20 px-4 py-2 rounded-xl mb-4 lg:ml-auto w-max">
-            <span className="text-gold font-bold text-xs uppercase tracking-widest">
-              ✦ Dual Identity
-            </span>
-          </div>
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-light backdrop-blur-xs bg-dark/20 p-4 lg:p-0 rounded-2xl lg:bg-transparent border border-white/5 lg:border-none">
-            Mahasiswa{" "}
-            <span className="text-white font-medium">UIN Jakarta</span> yang
-            memadukan presisi logika kode{" "}
-            <span className="text-gold font-medium">Laravel & React</span>{" "}
-            dengan energi disiplin kepemimpinan{" "}
-            <span className="text-gold font-medium">
-              Taekwondo Visi Muda Club
-            </span>
-            .
-          </p>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   );
 }

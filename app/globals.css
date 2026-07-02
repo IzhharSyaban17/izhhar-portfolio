@@ -16,7 +16,7 @@
   body {
     background-color: var(--color-dark);
     color: #ffffff;
-    overflow-x: hidden; /* Mencegah layar bergeser ke samping */
+    overflow-x: hidden;
     @apply bg-background text-foreground;
   }
   * {
@@ -27,7 +27,118 @@
   }
 }
 
+@utility glass {
+  @apply backdrop-blur-xl bg-navy/[0.06] border border-white/[0.06] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+}
+
+@utility glass-hover {
+  @apply hover:border-gold/30 hover:shadow-[0_8px_32px_0_rgba(212,175,55,0.08)];
+}
+
+@utility glass-gold {
+  @apply backdrop-blur-xl bg-navy/[0.08] border border-gold/[0.12] shadow-[0_8px_32px_0_rgba(212,175,55,0.06)];
+}
+
+@utility glass-gold-hover {
+  @apply hover:border-gold/40 hover:shadow-[0_8px_32px_0_rgba(212,175,55,0.15)];
+}
+
+@utility glass-inner {
+  @apply backdrop-blur-lg bg-dark/[0.3] border border-white/[0.04];
+}
+
+@utility scroll-reveal {
+  view-timeline-name: --reveal;
+  animation: scroll-reveal linear both;
+  animation-timeline: view(70% 5%);
+}
+
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    translate: 0 2rem;
+    scale: 0.97;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@utility scroll-reveal-left {
+  view-timeline-name: --reveal-left;
+  animation: scroll-reveal-left linear both;
+  animation-timeline: view(70% 5%);
+}
+
+@keyframes scroll-reveal-left {
+  from {
+    opacity: 0;
+    translate: -2rem 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@utility scroll-reveal-right {
+  view-timeline-name: --reveal-right;
+  animation: scroll-reveal-right linear both;
+  animation-timeline: view(70% 5%);
+}
+
+@keyframes scroll-reveal-right {
+  from {
+    opacity: 0;
+    translate: 2rem 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@utility scroll-shine {
+  view-timeline-name: --shine;
+  animation: scroll-shine linear both;
+  animation-timeline: view(80% 10%);
+}
+
+@keyframes scroll-shine {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@utility level-expert {
+  @apply text-gold bg-gold/[0.1] border-gold/30;
+}
+
+@utility level-advanced {
+  @apply text-cyan-400 bg-cyan-400/[0.1] border-cyan-400/30;
+}
+
+@utility level-intermediate {
+  @apply text-slate-400 bg-slate-400/[0.1] border-slate-400/30;
+}
+
+.no-visible-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.no-visible-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @theme inline {
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -68,6 +179,28 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --animate-shine: shine var(--duration) infinite linear;
+  @keyframes shine {
+  0% {
+    background-position: 0% 0%;
+    }
+  50% {
+    background-position: 100% 100%;
+    }
+  to {
+    background-position: 0% 0%;
+    }
+  }
+  @keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+    }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+    }
+  }
 }
 
 :root {
