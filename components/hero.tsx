@@ -27,10 +27,6 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const contentY = useTransform(scrollYProgress, [0.35, 0.85], [0, -100]);
-  const contentOpacity = useTransform(scrollYProgress, [0.35, 0.75], [1, 0]);
-  const photoY = useTransform(scrollYProgress, [0.35, 0.85], [0, 80]);
-  const photoOpacity = useTransform(scrollYProgress, [0.35, 0.75], [1, 0.3]);
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
   const currentTab = heroTabs.find((t) => t.id === activeTab)!;
@@ -65,7 +61,6 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-dark/60 via-dark/30 to-dark pointer-events-none z-[2]" />
 
       <motion.div
-        style={{ y: contentY, opacity: contentOpacity }}
         className="relative z-10 w-full"
       >
         <div className="container mx-auto px-6 max-w-7xl">
@@ -211,7 +206,6 @@ export default function Hero() {
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              style={{ y: photoY, opacity: photoOpacity }}
               className="order-1 lg:order-2 flex justify-center lg:justify-end"
             >
               <motion.div
