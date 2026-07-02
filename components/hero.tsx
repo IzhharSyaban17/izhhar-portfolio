@@ -15,6 +15,7 @@ import { Spotlight } from "@/components/ui/aceternity/spotlight";
 import { BackgroundBeams } from "@/components/ui/aceternity/background-beams";
 import { heroTabs, personalInfo, stats } from "@/data/personal";
 import { cn } from "@/lib/utils";
+import { CountUp } from "@/components/ui/count-up";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,12 +73,25 @@ export default function Hero() {
               className="order-2 lg:order-1"
             >
               <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="text-gold font-bold tracking-[0.3em] text-xs uppercase mb-6 block"
               >
-                &mdash; {personalInfo.tagline}
+                &mdash;{" "}
+                {personalInfo.tagline.split("").map((char, idx) => (
+                  <motion.span
+                    key={idx}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      delay: 0.2 + idx * 0.03,
+                      duration: 0.01,
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
               </motion.span>
 
               <motion.div
@@ -165,7 +179,7 @@ export default function Hero() {
                       {currentStats.map((stat, i) => (
                         <span key={i} className="flex items-center gap-1.5">
                           <span className="w-1.5 h-1.5 rounded-full bg-gold" />
-                          {stat.value}
+                          <CountUp value={stat.value} />
                           {stat.suffix} {stat.label}
                         </span>
                       ))}

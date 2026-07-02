@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Rajdhani, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { CustomCursor } from "@/components/ui/custom-cursor";
+import { PageLoader } from "@/components/ui/page-loader";
+import { FloatingSocials } from "@/components/ui/floating-socials";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -94,6 +97,9 @@ export default function RootLayout({
       <body
         className={`${geist.variable} ${rajdhani.variable} font-sans antialiased`}
       >
+        <PageLoader />
+        <CustomCursor />
+        <FloatingSocials />
         {children}
       </body>
     </html>

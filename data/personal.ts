@@ -343,11 +343,10 @@ export const timeline: TimelineEntry[] = [
     subtitle: "Pengembangan Skill Teknis",
     description: [
       "Mendalami React, Tailwind CSS, dan framework frontend modern",
-      "Sertifikasi BNSP Web Development (Laravel)",
-      "Data Analytics Bootcamp — Tableau & PostgreSQL",
+      "Sertifikasi UI / UX Dan Web Dev",
       "Mengerjakan proyek freelance fullstack",
     ],
-    tags: ["React", "Tailwind", "BNSP", "Tableau"],
+    tags: ["React", "Tailwind", "UI/UX", "Web Dev"],
     icon: "Award",
     color: "cyan",
   },
@@ -812,7 +811,7 @@ export const siteMetadata = {
 export const experienceMetadata = {
   title: "Pengalaman & Timeline",
   description:
-    "Rekam jejak Muhammad Izhhar Sya'ban Lubis — dari kode Laravel hingga matras taekwondo, KKN 2025, Coach Visi Muda, dan AI Enthusiast.",
+    "Rekam jejak Muhammad Izhhar Sya'ban Lubis — dari web dev hingga taekwondo, KKN 2025, Coach Visi Muda, dan AI Enthusiast.",
 };
 
 export const designTokens = {

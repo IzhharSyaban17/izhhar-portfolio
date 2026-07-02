@@ -54,6 +54,7 @@ export default function About() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="text-[10px] text-gold/30 font-heading font-semibold block mb-2 tracking-[0.25em]">01 // ABOUT</span>
           <h4 className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-6 italic">
             &mdash; ABOUT ME
           </h4>

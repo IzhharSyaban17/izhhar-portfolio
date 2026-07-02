@@ -76,6 +76,7 @@ export default function Skills() {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
+          <span className="text-[10px] text-gold/30 font-heading font-semibold block mb-2 tracking-[0.25em]">02 // SKILLS</span>
           <h4 className="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-4">
             &mdash; TOOLKIT & EXPERTISE
           </h4>
@@ -120,16 +121,31 @@ export default function Skills() {
                       {cat.description}
                     </p>
 
-                    <div className="space-y-2.5">
+                    <div className="space-y-3.5">
                       {cat.skills.map((skill, sIdx) => (
-                        <div
-                          key={sIdx}
-                          className="flex items-center justify-between gap-2"
-                        >
-                          <span className="text-xs text-slate-300 font-medium truncate">
-                            {skill.name}
-                          </span>
-                          <LevelChip level={skill.level} />
+                        <div key={sIdx} className="space-y-1.5">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs text-slate-300 font-semibold truncate">
+                              {skill.name}
+                            </span>
+                            <LevelChip level={skill.level} />
+                          </div>
+                          <div className="h-[3px] w-full bg-white/[0.04] rounded-full overflow-hidden">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{
+                                width:
+                                  skill.level === "Expert"
+                                    ? "92%"
+                                    : skill.level === "Advanced"
+                                    ? "78%"
+                                    : "62%",
+                              }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 1, delay: sIdx * 0.05, ease: "easeOut" }}
+                              className="h-full bg-gradient-to-r from-gold to-premium rounded-full shadow-[0_0_8px_rgba(212,175,55,0.4)]"
+                            />
+                          </div>
                         </div>
                       ))}
                     </div>

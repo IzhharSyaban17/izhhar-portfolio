@@ -61,7 +61,7 @@ export default function Navbar() {
   return (
     <>
       <div
-        className="fixed top-0 left-0 h-[2px] z-[60] bg-gradient-to-r from-gold via-premium to-gold transition-all duration-150"
+        className="fixed top-0 left-0 h-[3.5px] z-[60] bg-gradient-to-r from-gold via-premium to-gold transition-all duration-150 shadow-[0_0_8px_rgba(212,175,55,0.8)]"
         style={{ width: `${scrollProgress}%` }}
       />
 
