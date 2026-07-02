@@ -32,6 +32,17 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
   const handleSmoothScroll = (
     e: React.MouseEvent<HTMLAnchorElement>,
     targetId: string,
@@ -148,22 +159,38 @@ export default function Navbar() {
 
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
-                onClick={() => setIsMobileMenuOpen(false)}
-              />
-              <motion.div
-                initial={{ opacity: 0, x: 300 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 300 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed top-0 right-0 h-full w-[min(288px,85vw)] bg-dark/95 backdrop-blur-2xl border-l border-gold/20 shadow-2xl md:hidden z-40 overflow-y-auto"
-              >
-                <div className="pt-24 px-8 pb-12 flex flex-col space-y-2">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="fixed inset-0 w-full h-[100dvh] bg-dark/98 backdrop-blur-3xl md:hidden z-50 overflow-y-auto flex flex-col"
+            >
+              {/* Header inside full-screen menu */}
+              <div className="container mx-auto px-6 py-5 flex justify-between items-center border-b border-white/5 shrink-0">
+                <a
+                  href="#home"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMobileMenuOpen(false);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="text-2xl font-heading font-bold tracking-tighter text-white"
+                >
+                  Zar<span className="text-gold">.</span>
+                </a>
+                <button
+                  aria-label="Close navigation menu"
+                  className="text-gold focus:outline-none p-1"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <X size={28} />
+                </button>
+              </div>
+
+              {/* Centered links container */}
+              <div className="flex-1 flex flex-col justify-center items-center px-6 py-8 max-w-lg mx-auto w-full">
+                <div className="grid grid-cols-2 gap-3 w-full">
                   {navLinks.map((link) => {
                     const isActive = activeSection === link.href.replace("#", "");
                     return (
@@ -171,31 +198,33 @@ export default function Navbar() {
                         key={link.name}
                         href={link.href}
                         onClick={(e) => handleSmoothScroll(e, link.href)}
-                        className={`relative flex items-center space-x-4 text-lg py-4 px-4 rounded-xl transition-all ${
+                        className={`flex items-center space-x-3 text-sm py-3.5 px-4 rounded-xl border transition-all ${
                           isActive
-                            ? "text-gold bg-gold/10 border border-gold/20"
-                            : "text-white/70 hover:text-gold hover:bg-gold/5"
+                            ? "text-gold bg-gold/15 border-gold/30 shadow-[0_0_15px_rgba(212,175,55,0.15)] font-bold"
+                            : "text-white/70 bg-white/[0.02] border-white/5 hover:text-gold hover:bg-gold/5"
                         }`}
                       >
-                        <span className="text-gold">{link.icon}</span>
-                        <span className="font-heading font-bold uppercase tracking-widest">
+                        <span className="text-gold shrink-0">{link.icon}</span>
+                        <span className="font-heading uppercase tracking-wider truncate">
                           {link.name}
                         </span>
                       </a>
                     );
                   })}
-                  <div className="pt-6 px-4">
-                    <a
-                      href="#contact"
-                      onClick={(e) => handleSmoothScroll(e, "#contact")}
-                      className="block bg-gold text-dark font-bold py-4 rounded-xl text-center uppercase tracking-widest hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all"
-                    >
-                      Hire Me
-                    </a>
-                  </div>
                 </div>
-              </motion.div>
-            </>
+                
+                {/* CTA inside menu */}
+                <div className="w-full mt-6">
+                  <a
+                    href="#contact"
+                    onClick={(e) => handleSmoothScroll(e, "#contact")}
+                    className="block bg-gradient-to-r from-gold to-premium text-dark font-bold py-4 rounded-xl text-center uppercase tracking-widest hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all text-sm shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+                  >
+                    Hire Me
+                  </a>
+                </div>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </motion.nav>
